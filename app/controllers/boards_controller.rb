@@ -49,7 +49,7 @@ class BoardsController < ApplicationController
   end
 
   def set_random_board
-    @board = Board.find_by_sql("SELECT * FROM boards WHERE completed_count = (SELECT MIN(completed_count) FROM boards)").sample
+    @board = Board.find_by_sql('SELECT * FROM boards WHERE completed_count = (SELECT MIN(completed_count) FROM boards)').sample
     @cells = @board.cells
   end
 
