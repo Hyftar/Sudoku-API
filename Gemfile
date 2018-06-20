@@ -20,6 +20,8 @@ gem 'bcrypt', '~> 3.1.7'
 # JSON web token and simple_command for API authentication and authorization
 gem 'jwt'
 gem 'simple_command'
+# Permissions system
+gem 'pundit'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
