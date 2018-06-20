@@ -10,24 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_619_202_717) do
-  create_table 'boards', force: :cascade do |t|
-    t.integer 'completed_count', default: 0
+ActiveRecord::Schema.define(version: 20180620194002) do
+
+  create_table "boards", force: :cascade do |t|
   end
 
-  create_table 'cells', force: :cascade do |t|
-    t.integer 'content'
-    t.integer 'position'
-    t.boolean 'set', default: false
-    t.integer 'board_id'
-    t.index ['board_id'], name: 'index_cells_on_board_id'
+  create_table "cells", force: :cascade do |t|
+    t.integer "content"
+    t.integer "position"
+    t.integer "board_id"
+    t.index ["board_id"], name: "index_cells_on_board_id"
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'name'
-    t.string 'password_digest'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.boolean 'admin', default: false
+  create_table "completions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "board_id"
+    t.time "time"
+    t.index ["board_id"], name: "index_completions_on_board_id"
+    t.index ["user_id"], name: "index_completions_on_user_id"
   end
+
+  create_table "moves", force: :cascade do |t|
+    t.integer "board_id"
+    t.integer "user_id"
+    t.integer "cell_id"
+    t.integer "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_moves_on_board_id"
+    t.index ["cell_id"], name: "index_moves_on_cell_id"
+    t.index ["user_id"], name: "index_moves_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "admin", default: false
+  end
+
 end

@@ -1,26 +1,27 @@
 class Board < ApplicationRecord
   has_many :cells
+  has_many :moves
   accepts_nested_attributes_for :cells
 
   def as_json(options = {})
     h = super(options)
-    h[:cells] = cells.map { |x| x.slice(:set, :position, :content) }
+    h[:cells] = cells.map { |x| x.slice(:position, :content) }
     h
   end
 
   def play(args)
     cell = Cell.find_by(position: args[:position], board: id)
-    if !cell.set
-      cell.content = args[:content]
-      cell.save
-      if check_board
-        self.completed_count += 1
-        get_non_frozen_cells.each { |b_cell| b_cell.content = nil }.each(&:save)
-      end
-      :ok
-    else
-      :unauthorized
-    end
+    # if !cell.set
+    #   cell.content = args[:content]
+    #   cell.save
+    #   if check_board
+    #     self.completed_count += 1
+    #     get_non_frozen_cells.each { |b_cell| b_cell.content = nil }.each(&:save)
+    #   end
+    #   :ok
+    # else
+    #   :unauthorized
+    # end
   end
 
   # Return { valid? => boolean, offences => [positions] }
@@ -59,13 +60,5 @@ class Board < ApplicationRecord
     board_cells = Cell.find_by_sql("SELECT * FROM cells WHERE board_id = #{id}")
     combinations.reject { |combination| combination.map { |position| board_cells.find { |x| x.position == position } }.compact.uniq.count == 9 }
     byebug
-  end
-
-  def get_frozen_cells
-    Cell.find_by_sql("SELECT * FROM cells WHERE board_id = #{id} AND \"set\" = 1")
-  end
-
-  def get_non_frozen_cells
-    Cell.find_by_sql("SELECT * FROM cells WHERE board_id = #{id} AND \"set\" = 0")
   end
 end
