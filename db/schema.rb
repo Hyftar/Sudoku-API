@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_618_190_214) do
+ActiveRecord::Schema.define(version: 20_180_619_202_717) do
   create_table 'boards', force: :cascade do |t|
     t.integer 'completed_count', default: 0
   end
@@ -28,5 +28,6 @@ ActiveRecord::Schema.define(version: 20_180_618_190_214) do
     t.string 'password_digest'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.boolean 'admin', default: false
   end
 end
