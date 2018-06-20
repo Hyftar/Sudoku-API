@@ -1,5 +1,6 @@
 class BoardsController < ApplicationController
   before_action :set_board, only: %i[show update destroy play]
+  before_action :authorize_user, only: %i[update destroy create index]
   before_action :set_random_board, only: %i[random]
 
   def play
@@ -39,6 +40,14 @@ class BoardsController < ApplicationController
   end
 
   private
+
+  def authorize_user
+    begin
+      authorize Board
+    rescue Pundit::NotAuthorizedError
+      render status: :forbidden
+    end
+  end
 
   def board_params
     params.require(:board).permit(cells_attributes: %i[position content set])

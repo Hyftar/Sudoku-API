@@ -1,6 +1,14 @@
 class ApplicationPolicy
   attr_reader :user, :record
 
+  def self.permit_only_admin_to(*actions)
+    actions.each do |action|
+      define_method("#{action}?") do
+        @user.admin?
+      end
+    end
+  end
+
   def initialize(user, record)
     @user = user
     @record = record
