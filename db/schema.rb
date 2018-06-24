@@ -12,6 +12,14 @@
 
 ActiveRecord::Schema.define(version: 20180620194002) do
 
+  create_table "games", force: :cascade do |t|
+    t.integer "board_id"
+    t.integer "user_id"
+    t.datetime "finished_at", null: true
+    t.index ["board_id"], name: "index_games_on_board_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
+
   create_table "boards", force: :cascade do |t|
   end
 
@@ -22,16 +30,8 @@ ActiveRecord::Schema.define(version: 20180620194002) do
     t.index ["board_id"], name: "index_cells_on_board_id"
   end
 
-  create_table "completions", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "board_id"
-    t.time "time"
-    t.index ["board_id"], name: "index_completions_on_board_id"
-    t.index ["user_id"], name: "index_completions_on_user_id"
-  end
-
   create_table "moves", force: :cascade do |t|
-    t.integer "board_id"
+    t.integer "game_id"
     t.integer "user_id"
     t.integer "cell_id"
     t.integer "content"
