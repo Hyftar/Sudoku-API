@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20180620194002) do
   create_table "games", force: :cascade do |t|
     t.integer "board_id"
     t.integer "user_id"
+    t.datetime "created_at"
     t.datetime "finished_at", null: true
     t.index ["board_id"], name: "index_games_on_board_id"
     t.index ["user_id"], name: "index_games_on_user_id"
