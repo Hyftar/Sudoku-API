@@ -32,14 +32,14 @@ ActiveRecord::Schema.define(version: 20180620194002) do
 
   create_table "moves", force: :cascade do |t|
     t.integer "game_id"
-    t.integer "user_id"
     t.integer "cell_id"
     t.integer "content"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_moves_on_game_id"
     t.index ["board_id"], name: "index_moves_on_board_id"
     t.index ["cell_id"], name: "index_moves_on_cell_id"
     t.index ["user_id"], name: "index_moves_on_user_id"
+    t.index ["created_at"], name: "index_moves_on_created_at"
   end
 
   create_table "users", force: :cascade do |t|
