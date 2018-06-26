@@ -3,6 +3,21 @@ class Board < ApplicationRecord
   has_many :moves
   accepts_nested_attributes_for :cells
 
+  # Get a random board that the specified user has not completed nor started
+  def self.get_random_non_completed_board(user)
+    Board.find_by_sql("
+      SELECT *
+      FROM boards
+      WHERE id NOT IN (
+        SELECT board_id
+        FROM games
+        WHERE user_id = #{user.id}
+      )
+      ORDER BY RANDOM()
+      LIMIT 1
+    ").first
+  end
+
   def as_json(options = {})
     h = super(options)
     h[:cells] = cells.map { |x| x.slice(:position, :content) }
