@@ -28,11 +28,9 @@ class BoardsController < ApplicationController
   private
 
   def authorize_user
-    begin
-      authorize Board
-    rescue Pundit::NotAuthorizedError
-      render status: :forbidden
-    end
+    authorize Board
+  rescue Pundit::NotAuthorizedError
+    json_response status: :forbidden
   end
 
   def board_params

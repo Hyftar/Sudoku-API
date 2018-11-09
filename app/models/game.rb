@@ -8,10 +8,10 @@ class Game < ApplicationRecord
       id: id,
       user: user.name,
       start_time: created_at,
-      time_spent: finished_at ? finished_at - created_at : nil,
-      finished: self.finished?,
+      time_spent: finished_at ? (finished_at - created_at) : nil,
+      finished: finished?,
       cells: combined_board,
-      string_representation: self.to_s
+      string_representation: to_s
     }
   end
 
@@ -28,18 +28,7 @@ class Game < ApplicationRecord
     !finished_at.nil?
   end
 
-  private
-
-  def combined_board
-    positions = []
-    board.cells.each { |cell| positions << cell.position if cell.content.nil? }
-    empty_cells = Cell.where(board: board, position: positions)
-    moves = Move.where(cell: empty_cells, game: self)
-    player_controlled_cells = empty_cells.map { |cell| moves.find { |move| move.cell == cell } || cell }
-    return (board.cells | player_controlled_cells).map(&:as_json)
-  end
-
-  # Return { valid? => boolean, offences => [positions] }
+  # Return { completed => boolean, offences => [positions] }
   def check_board
     # Combinations needed to be checked for a winning board
     combinations = [
@@ -72,7 +61,24 @@ class Game < ApplicationRecord
       [60, 61, 62, 69, 70, 71, 78, 79, 80]
     ]
 
-    board_cells = Cell.find_by(board: self)
-    combinations.reject { |combination| combination.map { |position| board_cells.find { |x| x.position == position } }.compact.uniq.count == 9 }
+    # Sorry in advance if you have to debug this chaos...
+    json_board = combined_board
+    combinations.map! { |combination| json_board.select { |cell| combination.include? cell[:position] } } # Map the positions in the combinations array to cells in the board
+    combinations.reject! { |combination| combination.map { |cell| cell[:content] }.uniq.size == 9 } # Reject all the combinations that work (each cell has a unique number in the combination)
+    return { completed: true, offences: [] } if combinations.empty?
+    combinations.select! { |combination| combination.map { |cell| cell[:content] }.compact.uniq! } # Select the combinations which have duplicates except if the duplicates are empty cells
+    offences = combinations.select { |combination| combination.any? { |cell| !cell.frozen? } }.map { |combination| combination.select { |x| !x[:content].nil? && !x[:frozen] } }.flatten.uniq
+    { completed: false, offences: offences.map { |x| x.slice(:position) } }
+  end
+
+  private
+
+  # Combines the board with the player moves
+  def combined_board
+    positions = board.cells.where(content: nil).map(&:position)
+    empty_cells = Cell.where(board: board, position: positions)
+    moves = Move.get_most_recent_moves_at(empty_cells, self)
+    player_controlled_cells = empty_cells.map { |cell| moves.find { |move| move.cell == cell } || cell }
+    (board.cells.reject { |cell| moves.any? { |move| move.cell == cell } } | player_controlled_cells).map(&:as_json).sort_by { |x| x[:position] }
   end
 end

@@ -18,24 +18,20 @@ class Board < ApplicationRecord
     ").first
   end
 
-  def as_json(options = {})
-    h = super(options)
-    h[:cells] = cells.map { |x| x.slice(:position, :content) }
-    h
+  def as_json(_options = {})
+    {
+      id: id,
+      cells: cells,
+      string_representation: to_s
+    }
   end
 
-  def play(args)
-    cell = Cell.find_by(position: args[:position], board: id)
-    # if !cell.set
-    #   cell.content = args[:content]
-    #   cell.save
-    #   if check_board
-    #     self.completed_count += 1
-    #     get_non_frozen_cells.each { |b_cell| b_cell.content = nil }.each(&:save)
-    #   end
-    #   :ok
-    # else
-    #   :unauthorized
-    # end
+  def to_s
+    cells
+      .map(&:as_json)
+      .map { |x| x[:content] || 0 }
+      .each_slice(27)
+      .map { |x| x.each_slice(9).map { |y| y.each_slice(3).map { |z| z.join(' ') }.join(' | ') }.join("\n") }
+      .join("\n------+-------+------\n")
   end
 end

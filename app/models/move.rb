@@ -5,12 +5,20 @@ class Move < ApplicationRecord
 
   validates :content, inclusion: { in: 1..9 }, allow_nil: true
 
+  # Get the most recent moves at specific cells
+  def self.get_most_recent_moves_at(cells, game)
+    Move.where(cell: cells, game: game).group(:cell_id).order(created_at: :desc)
+  end
+
+  def frozen?
+    false
+  end
+
   def as_json
     {
       position: cell.position,
       content: content,
-      frozen: false
+      frozen: frozen?
     }
   end
-
 end
