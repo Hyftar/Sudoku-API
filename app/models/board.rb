@@ -3,6 +3,24 @@ class Board < ApplicationRecord
   has_many :moves
   accepts_nested_attributes_for :cells
 
+  def self.create_from_string(board_string)
+    position = -1
+    b = Board.new
+    b.save(validate: false)
+    cells =
+      board_string
+        .split(',')
+        .map(&:chomp)
+        .map(&:to_i)
+        .map do |digit|
+          position += 1
+          { board: b.id, content: digit.zero? ? nil : digit, position: position }
+        end
+
+    values = cells.flatten.map { |e| "(#{e.map { |_k, v| v.nil? ? 'null' : !!v == v ? v ? 1 : 0 : v }.join(',')})" }.join(',')
+    ActiveRecord::Base.connection.execute("INSERT INTO cells (\"board_id\", \"content\", \"position\") VALUES #{values}")
+  end
+
   # Get a random board that the specified user has not completed nor started
   def self.get_random_non_completed_board(user)
     Board.find_by_sql("
