@@ -25,15 +25,14 @@ class GamesController < ApplicationController
 
   def create
     create_params_hash = create_params
-    byebug
     if @current_game
       json_response(
         message: 'You still have a game running.',
         game_id: @current_game.id,
-        board_id: @current_game.board.id
+        board_id: @current_game.board_id
       )
     else
-      Game.create!(
+      @current_game = Game.create!(
         board: Board.find(create_params_hash[:board_id].to_i) || Board.get_random_non_completed_board(@current_user),
         user: @current_user
       )
