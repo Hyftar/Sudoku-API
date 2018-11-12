@@ -63,10 +63,13 @@ class Game < ApplicationRecord
 
     # Sorry in advance if you have to debug this chaos...
     json_board = combined_board
-    combinations.map! { |combination| json_board.select { |cell| combination.include? cell[:position] } } # Map the positions in the combinations array to cells in the board
-    combinations.reject! { |combination| combination.map { |cell| cell[:content] }.uniq.size == 9 } # Reject all the combinations that work (each cell has a unique number in the combination)
+    # Map the positions in the combinations array to cells in the board
+    combinations.map! { |combination| json_board.select { |cell| combination.include? cell[:position] } }
+    # Reject all the combinations that work (each cell has a unique number in the combination)
+    combinations.reject! { |combination| combination.map { |cell| cell[:content] }.uniq.size == 9 }
     return { completed: true, offences: [] } if combinations.empty?
-    combinations.select! { |combination| combination.map { |cell| cell[:content] }.compact.uniq! } # Select the combinations which have duplicates except if the duplicates are empty cells
+    # Select the combinations which have duplicates except if the duplicates are empty cells
+    combinations.select! { |combination| combination.map { |cell| cell[:content] }.compact.uniq! }
     offences = combinations.select { |combination| combination.any? { |cell| !cell.frozen? } }.map { |combination| combination.select { |x| !x[:content].nil? && !x[:frozen] } }.flatten.uniq
     { completed: false, offences: offences.map { |x| x.slice(:position) } }
   end
