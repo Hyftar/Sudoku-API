@@ -22,6 +22,7 @@ class Board < ApplicationRecord
   end
 
   # Get a random board that the specified user has not completed nor started
+  # or a completed one if the user has completed all the available boards.
   def self.get_random_non_completed_board(user)
     Board.find_by_sql("
       SELECT *
@@ -33,7 +34,13 @@ class Board < ApplicationRecord
       )
       ORDER BY RANDOM()
       LIMIT 1
-    ").first
+    ").first ||
+      Board.find_by_sql("
+        SELECT *
+        FROM boards
+        ORDER BY RANDOM()
+        LIMIT 1
+      ").first
   end
 
   def as_json(_options = {})
