@@ -37,9 +37,7 @@ ActiveRecord::Schema.define(version: 20180620194002) do
     t.integer "content"
     t.datetime "created_at", null: false
     t.index ["game_id"], name: "index_moves_on_game_id"
-    t.index ["board_id"], name: "index_moves_on_board_id"
     t.index ["cell_id"], name: "index_moves_on_cell_id"
-    t.index ["user_id"], name: "index_moves_on_user_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
   end
 
