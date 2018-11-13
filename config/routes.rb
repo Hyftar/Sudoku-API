@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   post 'authenticate', to: 'authentication#authenticate'
 
+  get 'scores', to: 'boards#scores'
   get 'play', to: 'games#peak'
   post 'join', to: 'games#create'
   post 'play', to: 'games#play'

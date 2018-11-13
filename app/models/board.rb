@@ -43,6 +43,13 @@ class Board < ApplicationRecord
       ").first
   end
 
+  def get_scores
+    Game.where(board: self)
+      .map { |x| { user: x.user.name, time_spent: x.finished_at - x.created_at} }
+      .sort_by { |x| x[:time_spent] }
+      .uniq { |x| x[:user] }
+  end
+
   def as_json(_options = {})
     {
       id: id,

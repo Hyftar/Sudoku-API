@@ -2,6 +2,11 @@ class BoardsController < ApplicationController
   before_action :set_board, only: %i[show update destroy play]
   before_action :authorize_user, only: %i[update destroy create index]
 
+  def scores
+    board = Board.find(params[:board_id])
+    json_response(board.get_scores)
+  end
+
   def show
     json_response(@board)
   end
@@ -31,6 +36,10 @@ class BoardsController < ApplicationController
     authorize Board
   rescue Pundit::NotAuthorizedError
     json_response status: :forbidden
+  end
+
+  def scores_params
+    params.permit(:board_id)
   end
 
   def board_params
