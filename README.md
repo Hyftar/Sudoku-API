@@ -18,7 +18,7 @@ If you want to create a user, you can use the following commands:
 
 ### Using the API
 
-This API uses JWT authentication, which means that every requests needs the header `Authentication: <KEY>`
+This API uses JWT authentication, which means that every requests needs the header `Authorization: <KEY>`
 
 You can receive a key for a user by submitting a POST request to the `/authenticate/` route containing the user name and password as **parameters** (`username: <USERNAME>` and `password: <PASSWORD>`)
 
