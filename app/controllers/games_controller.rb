@@ -33,7 +33,9 @@ class GamesController < ApplicationController
       )
     else
       @current_game = Game.create!(
-        board: Board.find(create_params_hash[:board_id].to_i) || Board.get_random_non_completed_board(@current_user),
+        board: create_params_hash[:board_id] ?
+          Board.find(create_params_hash[:board_id].to_i) :
+          Board.get_random_non_completed_board(@current_user),
         user: @current_user
       )
       json_response(
@@ -48,6 +50,7 @@ class GamesController < ApplicationController
     if @current_game
       @current_game.moves.destroy_all
       @current_game.destroy!
+      json_response(message: 'Sucessfully left the game.')
     else
       json_response(message: 'You are not part of any game.')
     end
