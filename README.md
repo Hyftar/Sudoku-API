@@ -51,9 +51,22 @@ will play on the board:
 }
 ```
 
+After making a move, the response contains information about the current state of the board.
+
 Once a board is completed, the game will automatically be finished, and the
 user will be free to start a new game.
 
 #### Exiting a game before completion
 
 A game can be exited before completion by sending a *DELETE* request to `/quit/`
+
+#### Getting highscores
+
+You can get the highscores of a specific board by sending a *GET* request to
+`/scores` with the `board_id` as the body of the request. Like so:
+
+```json
+{
+    "board_id": "3223"
+}
+```
