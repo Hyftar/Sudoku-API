@@ -1,8 +1,8 @@
 # Boards and Cells seeds
 cells =
   File
-  .open('db/sudokus.csv', 'r')
-  .readlines
+  .foreach('db/sudokus.csv')
+  .first(ENV["boards"] || 50)
   .map { |x| x.split(',').map(&:chomp).map(&:to_i) }
   .map do |row|
     position = -1
