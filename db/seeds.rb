@@ -2,7 +2,7 @@
 cells =
   File
   .foreach('db/sudokus.csv')
-  .first(ENV["boards"] || 50)
+  .first(ENV['BOARDS'].to_i || 50)
   .map { |x| x.split(',').map(&:chomp).map(&:to_i) }
   .map do |row|
     position = -1
