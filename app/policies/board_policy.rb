@@ -1,3 +1,3 @@
 class BoardPolicy < ApplicationPolicy
-  permit_only_admin_to :index, :update, :destroy, :create
+  permit_only_admin_to :update, :destroy, :create
 end

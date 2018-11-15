@@ -1,6 +1,6 @@
 class BoardsController < ApplicationController
   before_action :set_board, only: %i[show update destroy play]
-  before_action :authorize_user, only: %i[update destroy create index]
+  before_action :authorize_user, only: %i[update destroy create]
 
   def scores
     board = Board.find(params[:board_id])
@@ -12,7 +12,7 @@ class BoardsController < ApplicationController
   end
 
   def index
-    @boards = Board.first(50)
+    @boards = Board.paginate(page: board_index_params()[:page]).map(&:as_json_short)
     json_response(@boards)
   end
 
@@ -44,6 +44,10 @@ class BoardsController < ApplicationController
 
   def board_params
     params.require(:board).permit(cells_attributes: %i[position content set])
+  end
+
+  def board_index_params
+    params.permit(:page)
   end
 
   def set_board

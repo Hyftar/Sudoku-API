@@ -3,6 +3,8 @@ class Board < ApplicationRecord
   has_many :moves
   accepts_nested_attributes_for :cells
 
+  self.per_page = 10
+
   def self.create_from_string(board_string)
     position = -1
     b = Board.new
@@ -56,6 +58,20 @@ class Board < ApplicationRecord
       cells: cells,
       string_representation: to_s
     }
+  end
+
+  def as_json_short
+    {
+      id: id,
+      string_representation: to_s_short
+    }
+  end
+
+  def to_s_short
+    cells
+      .map(&:as_json)
+      .map { |x| x[:content] || 0 }
+      .join
   end
 
   def to_s
