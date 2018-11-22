@@ -6,6 +6,7 @@ class Game < ApplicationRecord
   def as_json
     {
       id: id,
+      board_id: board_id,
       user: user.name,
       start_time: created_at,
       time_spent: finished_at ? (finished_at - created_at) : nil,
