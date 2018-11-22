@@ -81,7 +81,7 @@ class Game < ApplicationRecord
     positions = board.cells.where(content: nil).map(&:position)
     empty_cells = Cell.where(board: board, position: positions)
     moves = Move.get_most_recent_moves_at(empty_cells, self)
-    player_controlled_cells = empty_cells.map { |cell| moves.find { |move| move.cell == cell } || cell }
+    player_controlled_cells = empty_cells.map { |cell| moves.find_by(cell: cell) || cell }
     (board.cells.reject { |cell| moves.any? { |move| move.cell == cell } } | player_controlled_cells).map(&:as_json).sort_by { |x| x[:position] }
   end
 end
