@@ -9,7 +9,7 @@ gem 'will_paginate', '~> 3.1.0'
 
 gem 'dotenv-rails', groups: %i[development test]
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.1.6'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -26,8 +26,8 @@ gem 'simple_command'
 # Permissions system
 gem 'pundit'
 # Security issues with previous versions of those gems
-gem 'loofah', '<= 2.2.3'
-gem 'nokogiri', '~> 1.8.2'
+gem 'loofah', '~> 2.2', '>= 2.2.3'
+gem 'nokogiri', '~> 1.10.5'
 gem 'rails-html-sanitizer', '~> 1.0.4'
 
 # Use Capistrano for deployment
