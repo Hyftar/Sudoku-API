@@ -9,7 +9,7 @@ gem 'will_paginate', '~> 3.1.0'
 
 gem 'dotenv-rails', '>= 2.7.6', groups: %i[development test]
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.8', '>= 7.0.8.1'
+gem 'rails', '~> 7.0.0'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
